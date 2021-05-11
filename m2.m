@@ -23,7 +23,7 @@ decode=x_squre>10^6;
 % ar=lpc(input,50);
 % [H,w]=freqz(1,ar,4000);
 % stem([0:4000-1],abs(H).^2)
-[outputy,outputx]=frequency_analysis_LPC(input,20);
+[outputy,outputx]=frequency_analysis_goertzel(input);
 
 
 

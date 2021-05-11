@@ -1,24 +1,22 @@
 function [output_y,output_x]=frequency_analysis_goertzel(input)
-fs=8000;
+%This function is an auxiliary function in goertzel method, do some
+%preparation and flow control.
+
+fs=8000;            %fs stand for sampling rate
 T=1/fs;
-t=[0:T:1-T];
-figure(1);
-stem(t,input);
-output=fftshift(fft(input));
-figure(2);
-stem([0:length(input)-1],abs(output));
-%stem(linspace(-fs/2,fs/2,length(t)),abs(output));
+t=[0:T:1-T]; 
 N=length(input);
-x_squre=zeros(1,N);
-for k=[696:1634]
-[vk,vk_last]=compute_vk(N,input,N,k);
-x_squre(k)=vk^2+vk_last^2-2*cos(2*pi*k/N)*vk*vk_last;
+x_squre=zeros(1,N);     %x_squre used to store the result from goertzel method, 
+                        %it represents energy density.
+for k=[697 770 852 941 1209 1336 1477 1633]
+[vk,vk_last]=compute_vk(N,input,N,k);                   % vk is a intermediate variable, 
+                                                        % and is calculated recursively.
+x_squre(k)=vk^2+vk_last^2-2*cos(2*pi*k/N)*vk*vk_last;   % NO complex multiple is used in the whole process.
 end
-figure(3)
-Filter=x_squre>10^6;
-output=find(Filter);
-output_y=output(1);
-output_x=output(2);
+Filter=x_squre>10^6;    %Select the frequency that have energy.
+output=find(Filter);    %Directly give two found frequency.
+output_y=output(1);     % Output lower frequency
+output_x=output(2);     % Output higher frequency
 
 
 
